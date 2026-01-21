@@ -1,5 +1,5 @@
 {
-  "name": "@modelcontextprotocol/server-screenshot",
+  "name": "@ylubi/server-screenshot",
   "version": "0.1.0",
   "description": "MCP server providing screenshot capabilities for AI assistants. Supports window and region capture with three window search methods (handle, title, process name). Includes built-in save functionality and long screenshot with auto-scroll.",
   "main": "dist/index.js",
@@ -30,7 +30,7 @@
     "model-context-protocol",
     "ai-tools"
   ],
-  "author": "",
+  "author": "ylubi <yhuiche@gmail.com>",
   "license": "MIT",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.0",
@@ -50,8 +50,6 @@
   "engines": {
     "node": ">=18.0.0"
   },
-  "author": "ylubi <yhuiche@gmail.com>",
-  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/ylubi/screenshot-mcp.git"

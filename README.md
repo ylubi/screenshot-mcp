@@ -41,7 +41,7 @@
   "mcpServers": {
     "screenshot": {
       "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-screenshot"]
+      "args": ["-y", "@ylubi/server-screenshot"]
     }
   }
 }
@@ -58,7 +58,7 @@
   "cline.mcpServers": {
     "screenshot": {
       "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-screenshot"]
+      "args": ["-y", "@ylubi/server-screenshot"]
     }
   }
 }
@@ -71,7 +71,7 @@
 ```json
 {
   "command": "npx",
-  "args": ["-y", "@modelcontextprotocol/server-screenshot"]
+  "args": ["-y", "@ylubi/server-screenshot"]
 }
 ```
 
