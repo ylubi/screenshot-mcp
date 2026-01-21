@@ -24,8 +24,8 @@ export class MCPServer {
   private isRunning: boolean = false;
   private serverInfo = {
     name: 'screenshot-mcp',
-    version: '1.0.0',
-    description: 'Screenshot MCP Server - Provides screenshot capabilities for AI assistants. Supports window capture (by handle/title/process name), region capture, and direct file saving. Cross-platform support for Windows, macOS, and Linux.',
+    version: '1.1.0',
+    description: 'Screenshot MCP Server - Provides screenshot capabilities for AI assistants. Supports window capture (by handle/title/process name), region capture, long screenshot with auto-scroll (via longScreenshot parameter), and direct file saving. Cross-platform support for Windows, macOS, and Linux.',
   };
 
   constructor() {

@@ -36,13 +36,14 @@ npm run build
 
 ## 核心功能
 
-### 5 个工具
+### 6 个工具
 
 1. **list_windows** - 列出所有窗口
 2. **capture_window** - 截取窗口（支持 3 种查找方式）
 3. **capture_region** - 截取屏幕区域
 4. **save_screenshot** - 保存截图到文件
 5. **capture_and_save** - 一步完成截图和保存（推荐）
+6. **capture_long_screenshot** - 自动滚动并拼接长截图，直接保存 ⭐ 新功能
 
 ### 三种窗口查找方式
 
@@ -109,6 +110,32 @@ AI 会调用：
 }
 ```
 
+### 示例 4：捕获 Chrome 浏览器的完整网页（长截图）⭐
+
+```
+用户：请截取 Chrome 浏览器的完整网页并保存到 C:\screenshots\webpage.png
+```
+
+AI 会调用：
+```json
+{
+  "name": "capture_long_screenshot",
+  "arguments": {
+    "processName": "chrome.exe",
+    "filePath": "C:\\screenshots\\webpage.png",
+    "scrollDelay": 800,
+    "maxScrolls": 15
+  }
+}
+```
+
+**说明：**
+- 工具会自动滚动浏览器窗口
+- 每次滚动后等待 800ms 让内容加载
+- 最多滚动 15 次
+- 自动拼接所有截图生成长图
+- **直接保存到文件**，不返回 base64 数据
+
 ## 常见应用程序进程名
 
 | 应用程序 | 进程名 | 推荐搜索词 |
@@ -123,6 +150,8 @@ AI 会调用：
 
 ## 性能建议
 
+### 普通截图
+
 | 尺寸 | 数据量 | 响应时间 | 推荐用途 |
 |------|--------|----------|----------|
 | 100x100 | 52KB | < 1秒 | 快速预览 |
@@ -135,6 +164,19 @@ AI 会调用：
 - 一般使用：200x200 到 400x300
 - 详细查看：400x300 到 800x600
 - 避免使用：超过 1000x1000
+
+### 长截图
+
+| 参数 | 推荐值 | 说明 |
+|------|--------|------|
+| scrollDelay | 500-1000ms | 网页内容需要更长加载时间 |
+| maxScrolls | 10-20 | 防止无限滚动 |
+| overlapPixels | 30-100 | 确保拼接平滑 |
+
+**注意：**
+- 长截图会生成较大的文件（可能 5-20MB）
+- 建议在本地保存，不要通过 base64 传输
+- 滚动速度过快可能导致内容未加载完成
 
 ## 故障排除
 
@@ -168,6 +210,22 @@ File already exists: xxx. Set overwrite=true to replace it
 
 **解决方案：**
 添加 `overwrite: true` 参数
+
+### 问题 4：长截图不完整
+
+**原因：** 滚动速度过快或内容加载慢
+
+**解决方案：**
+1. 增加 `scrollDelay`（如 1000ms）
+2. 减少 `scrollAmount`（如窗口高度的 60%）
+3. 增加 `overlapPixels`（如 100）
+
+### 问题 5：长截图在 Linux 上不工作
+
+**原因：** 目前仅支持 Windows 和 macOS
+
+**解决方案：**
+使用 Windows 或 macOS 系统，或使用普通截图功能
 
 ## 更新
 

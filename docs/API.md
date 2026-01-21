@@ -1,6 +1,6 @@
 # Screenshot MCP API 文档
 
-## 工具列表
+## 工具列表（5 个工具）
 
 ### 1. list_windows
 
@@ -27,15 +27,23 @@
 
 ### 2. capture_window
 
-截取特定窗口的截图。
+截取特定窗口的截图。**支持长截图模式**。
 
 **参数：**
 - `windowHandle` (string, 可选): 窗口句柄（如 "12345"）
 - `windowTitle` (string, 可选): 窗口标题（如 "简单的UI窗口"）
-- `processName` (string, 可选): 进程名（如 "python.exe"）
+- `processName` (string, 可选): 进程名（如 "python.exe"）⭐ 推荐
 - `includeFrame` (boolean, 可选): 是否包含窗口边框（默认：true）
+- **`longScreenshot` (boolean, 可选): 是否启用长截图模式（默认：false）⭐ 新功能**
+- `scrollDelay` (number, 可选): 滚动延迟（毫秒，默认：500）
+- `scrollAmount` (number, 可选): 每次滚动像素数（默认：窗口高度的 80%）
+- `maxScrolls` (number, 可选): 最大滚动次数（默认：20）
+- `overlapPixels` (number, 可选): 截图重叠像素数（默认：50）
 
-**注意：** `windowHandle`、`windowTitle`、`processName` 三选一
+**注意：** 
+- `windowHandle`、`windowTitle`、`processName` 三选一
+- 长截图模式会返回很大的 base64 数据，可能超时
+- **推荐使用 `capture_and_save` 工具保存长截图**
 
 **返回：**
 ```json
@@ -94,9 +102,9 @@
 
 ---
 
-### 5. capture_and_save
+### 5. capture_and_save ⭐ 推荐
 
-一步完成截图和保存（推荐）。
+一步完成截图和保存。**支持长截图模式**。
 
 **通用参数：**
 - `mode` (string, 必需): 模式 - "region" 或 "window"
@@ -113,8 +121,13 @@
 **Window 模式参数：**
 - `windowHandle` (string, 可选): 窗口句柄
 - `windowTitle` (string, 可选): 窗口标题
-- `processName` (string, 可选): 进程名
+- `processName` (string, 可选): 进程名 ⭐ 推荐
 - `includeFrame` (boolean, 可选): 是否包含边框（默认：true）
+- **`longScreenshot` (boolean, 可选): 是否启用长截图模式（默认：false）⭐ 新功能**
+- `scrollDelay` (number, 可选): 滚动延迟（毫秒，默认：500）
+- `scrollAmount` (number, 可选): 每次滚动像素数（默认：窗口高度的 80%）
+- `maxScrolls` (number, 可选): 最大滚动次数（默认：20）
+- `overlapPixels` (number, 可选): 截图重叠像素数（默认：50）
 
 **注意：** Window 模式下，`windowHandle`、`windowTitle`、`processName` 三选一
 
@@ -129,6 +142,74 @@
   "timestamp": "2026-01-19T10:30:00.000Z"
 }
 ```
+
+**长截图示例：**
+```json
+{
+  "mode": "window",
+  "processName": "chrome.exe",
+  "filePath": "C:\\screenshots\\webpage.png",
+  "longScreenshot": true,
+  "scrollDelay": 800,
+  "maxScrolls": 15,
+  "overwrite": true
+}
+```
+
+---
+
+## 长截图功能 ⭐ 新功能
+
+通过设置 `longScreenshot=true`，可以在 `capture_window` 和 `capture_and_save` 工具中启用长截图模式。
+
+### 工作原理
+
+1. 捕获窗口的第一张截图
+2. 自动向下滚动窗口
+3. 等待内容加载（scrollDelay）
+4. 再次截图
+5. 检测是否到达底部（图像不再变化）
+6. 重复步骤 2-5，直到到达底部或达到 maxScrolls
+7. 将所有截图拼接成一张长图
+
+### 使用场景
+
+- ✅ 捕获完整网页（Chrome、Firefox 等浏览器）
+- ✅ 截取长文档（Word、PDF 阅读器）
+- ✅ 保存聊天记录或长列表
+- ✅ 捕获代码编辑器的完整文件
+
+### 参数说明
+
+| 参数 | 默认值 | 说明 |
+|------|--------|------|
+| `scrollDelay` | 500ms | 滚动后等待内容加载的时间 |
+| `scrollAmount` | 窗口高度的 80% | 每次滚动的像素数 |
+| `maxScrolls` | 20 | 最大滚动次数（防止无限循环） |
+| `overlapPixels` | 50 | 截图之间的重叠像素数（用于平滑拼接） |
+
+### 平台支持
+
+- ✅ Windows
+- ✅ macOS
+- ❌ Linux（暂不支持）
+
+### 注意事项
+
+1. **使用 capture_and_save 而不是 capture_window**
+   - 长截图会生成很大的图像（可能 5-20MB）
+   - base64 数据传输可能超时
+   - 直接保存到文件更可靠
+
+2. **调整参数以适应不同内容**
+   - 网页：`scrollDelay: 800-1000`（需要加载图片、脚本）
+   - 本地文档：`scrollDelay: 300-500`（加载快）
+   - 慢速网页：`scrollDelay: 1500-2000`
+
+3. **避免在动态内容上使用**
+   - 视频播放器
+   - 自动刷新的页面
+   - 无限滚动的列表
 
 ---
 
@@ -151,6 +232,7 @@
 | `File already exists` | 文件已存在 | 设置 `overwrite: true` |
 | `Invalid file extension` | 文件扩展名不是 .png | 使用 .png 扩展名 |
 | `One of windowHandle, windowTitle, or processName must be provided` | 未提供窗口查找参数 | 提供至少一个参数 |
+| `Long screenshot is not supported on this platform yet` | 平台不支持长截图 | 仅支持 Windows 和 macOS |
 
 ---
 
@@ -191,3 +273,9 @@
 - ✅ 需要保存截图到文件
 - ✅ 在 Kiro 中使用（AI 无法访问工具返回值）
 - ✅ 想要一步完成截图和保存
+
+### 什么时候使用长截图？
+- ✅ 需要捕获完整的可滚动内容
+- ✅ 网页、文档或列表超过一屏
+- ✅ 想要自动滚动和拼接
+- ✅ 内容很长，避免数据传输超时（使用 capture_and_save）

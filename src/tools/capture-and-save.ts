@@ -4,12 +4,14 @@
  * MCP tool for capturing a screenshot and saving it to a file in one operation.
  * This tool combines capture_region/capture_window with save_screenshot to work around
  * the limitation that AI cannot access tool return values in some MCP clients.
+ * Supports both single screenshot and long screenshot (with scrolling).
  */
 
 import { Tool, ToolDefinition, ToolResult, ImageBuffer } from '../types/index.js';
 import { PlatformScreenshot } from '../platform/interface.js';
 import { ScreenshotError, ErrorCode } from '../types/errors.js';
 import { validateRegionCoordinates, validateDisplay, validateWindowHandle } from '../utils/validation.js';
+import { captureLongScreenshot, LongScreenshotOptions } from '../utils/long-screenshot.js';
 import { promises as fs } from 'fs';
 import { dirname, resolve, extname } from 'path';
 import { PNG } from 'pngjs';
@@ -34,6 +36,13 @@ export interface CaptureAndSaveParams {
   processName?: string;  // Alternative to windowHandle: search by process name
   includeFrame?: boolean;
   
+  // Long screenshot parameters (optional, for window mode only)
+  longScreenshot?: boolean;
+  scrollDelay?: number;
+  scrollAmount?: number;
+  maxScrolls?: number;
+  overlapPixels?: number;
+  
   // Save parameters (always required)
   filePath: string;
   overwrite?: boolean;
@@ -57,7 +66,7 @@ export interface CaptureAndSaveResult {
 export class CaptureAndSaveTool implements Tool {
   definition: ToolDefinition = {
     name: 'capture_and_save',
-    description: 'Capture a screenshot and save it to a file in one operation. This is a convenience tool that combines screenshot capture with file saving. Use this when you want to save a screenshot directly without needing to handle the base64 data. Supports both region and window capture modes. For window mode, you can use windowHandle (numeric ID), windowTitle (search by title), or processName (search by process) - windowTitle or processName is easier as you can directly use the window/process name.',
+    description: 'Capture a screenshot and save it to a file in one operation. This is a convenience tool that combines screenshot capture with file saving. Use this when you want to save a screenshot directly without needing to handle the base64 data. Supports both region and window capture modes. For window mode, you can use windowHandle (numeric ID), windowTitle (search by title), or processName (search by process) - windowTitle or processName is easier as you can directly use the window/process name. Also supports long screenshot mode (set longScreenshot=true) to automatically scroll and stitch for capturing full web pages or long documents.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -103,6 +112,30 @@ export class CaptureAndSaveTool implements Tool {
           type: 'boolean',
           description: 'Include frame (optional for window mode): whether to include window border (default: true)',
           default: true,
+        },
+        longScreenshot: {
+          type: 'boolean',
+          description: 'Long screenshot mode (optional, for window mode only): set to true to automatically scroll the window and stitch multiple screenshots into one long image. Useful for capturing full web pages, long documents, or scrollable lists (default: false)',
+          default: false,
+        },
+        scrollDelay: {
+          type: 'number',
+          description: 'Scroll delay (optional, for long screenshot): milliseconds to wait between scrolls for content to load (default: 500)',
+          default: 500,
+        },
+        scrollAmount: {
+          type: 'number',
+          description: 'Scroll amount (optional, for long screenshot): pixels to scroll each time. If not specified, uses 80% of window height',
+        },
+        maxScrolls: {
+          type: 'number',
+          description: 'Max scrolls (optional, for long screenshot): maximum number of scroll operations to prevent infinite loops (default: 20)',
+          default: 20,
+        },
+        overlapPixels: {
+          type: 'number',
+          description: 'Overlap pixels (optional, for long screenshot): number of pixels to overlap between screenshots for better stitching (default: 50)',
+          default: 50,
         },
         filePath: {
           type: 'string',
@@ -256,11 +289,30 @@ export class CaptureAndSaveTool implements Tool {
         }
 
         const includeFrame = params.includeFrame ?? true;
+        const longScreenshot = params.longScreenshot ?? false;
 
-        imageBuffer = await this.platform.captureWindow(
-          windowHandle,
-          includeFrame
-        );
+        if (longScreenshot) {
+          // Long screenshot mode: scroll and stitch
+          const options: LongScreenshotOptions = {
+            scrollDelay: params.scrollDelay,
+            scrollAmount: params.scrollAmount,
+            maxScrolls: params.maxScrolls,
+            overlapPixels: params.overlapPixels,
+          };
+          
+          imageBuffer = await captureLongScreenshot(
+            this.platform,
+            windowHandle,
+            includeFrame,
+            options
+          );
+        } else {
+          // Single screenshot mode
+          imageBuffer = await this.platform.captureWindow(
+            windowHandle,
+            includeFrame
+          );
+        }
 
         // Get dimensions from ImageBuffer
         width = imageBuffer.width;

@@ -6,3 +6,4 @@
 
 export * from './image.js';
 export * from './validation.js';
+export * from './long-screenshot.js';

@@ -1,9 +1,19 @@
 {
-  "name": "screenshot-mcp",
-  "version": "1.0.0",
-  "description": "MCP server providing screenshot capabilities for AI assistants. Supports window and region capture with three window search methods (handle, title, process name). Includes built-in save functionality.",
+  "name": "@modelcontextprotocol/server-screenshot",
+  "version": "0.1.0",
+  "description": "MCP server providing screenshot capabilities for AI assistants. Supports window and region capture with three window search methods (handle, title, process name). Includes built-in save functionality and long screenshot with auto-scroll.",
   "main": "dist/index.js",
   "type": "module",
+  "bin": {
+    "mcp-server-screenshot": "dist/index.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE",
+    "docs"
+  ],
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
