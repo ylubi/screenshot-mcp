@@ -49,5 +49,12 @@
   },
   "engines": {
     "node": ">=18.0.0"
-  }
+  },
+  "author": "ylubi <yhuiche@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ylubi/screenshot-mcp.git"
+  },
+  "homepage": "https://github.com/ylubi/screenshot-mcp#readme"
 }
