@@ -10,7 +10,7 @@
 
 ```json
 {
-  "name": "@modelcontextprotocol/server-screenshot",
+  "name": "@ylubi/screenshot-mcp",
   "version": "0.1.0",
   "description": "MCP server providing screenshot capabilities for AI assistants...",
   "main": "dist/index.js",
@@ -42,7 +42,7 @@
 ```
 
 **重要字段说明：**
-- `name`: 包名，使用 `@modelcontextprotocol/server-*` 格式
+- `name`: 包名，使用 `@ylubi/screenshot-mcp` 格式
 - `version`: 版本号，遵循语义化版本
 - `bin`: 可执行命令名称
 - `files`: 要发布的文件列表（只包含必要文件）
@@ -116,8 +116,8 @@ npx mcp-server-screenshot
 
 # 或者打包测试
 npm pack
-# 这会生成 modelcontextprotocol-server-screenshot-0.1.0.tgz
-# 可以用 npm install ./modelcontextprotocol-server-screenshot-0.1.0.tgz 测试
+# 这会生成 ylubi-screenshot-mcp-0.1.0.tgz
+# 可以用 npm install ./ylubi-screenshot-mcp-0.1.0.tgz 测试
 ```
 
 ## 发布到 npm
@@ -159,11 +159,11 @@ npm publish --dry-run
 npm publish --access public
 ```
 
-如果使用自己的 scope（如 `@yourname/server-screenshot`）：
+如果使用自己的 scope（如 `@yourname/screenshot-mcp`）：
 
 ```bash
 # 修改 package.json 中的 name
-# "name": "@yourname/server-screenshot"
+# "name": "@yourname/screenshot-mcp"
 
 # 发布
 npm publish --access public
@@ -201,16 +201,16 @@ npm publish
 
 ### 1. 检查 npm 页面
 
-访问 `https://www.npmjs.com/package/@modelcontextprotocol/server-screenshot` 查看包信息。
+访问 `https://www.npmjs.com/package/@ylubi/screenshot-mcp` 查看包信息。
 
 ### 2. 测试安装
 
 ```bash
 # 使用 npx 测试
-npx -y @modelcontextprotocol/server-screenshot
+npx -y @ylubi/screenshot-mcp
 
 # 或全局安装测试
-npm install -g @modelcontextprotocol/server-screenshot
+npm install -g @ylubi/screenshot-mcp
 mcp-server-screenshot
 ```
 
@@ -223,7 +223,7 @@ mcp-server-screenshot
   "mcpServers": {
     "screenshot": {
       "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-screenshot"]
+      "args": ["-y", "@ylubi/screenshot-mcp"]
     }
   }
 }
@@ -318,12 +318,12 @@ npm publish
 
 ### 1. 发布失败：需要权限
 
-**问题**: `npm ERR! 403 Forbidden - PUT https://registry.npmjs.org/@modelcontextprotocol/server-screenshot`
+**问题**: `npm ERR! 403 Forbidden - PUT https://registry.npmjs.org/@ylubi/screenshot-mcp`
 
 **解决**:
-- `@modelcontextprotocol` scope 需要组织权限
-- 改用自己的 scope: `@yourname/server-screenshot`
-- 或者不使用 scope: `screenshot-mcp-server`
+- 如果使用组织 scope 需要相应权限
+- 改用自己的 scope: `@yourname/screenshot-mcp`
+- 或者不使用 scope: `screenshot-mcp`
 
 ### 2. 包名已被占用
 
@@ -357,10 +357,10 @@ npm publish
 
 ```bash
 # 撤销特定版本（发布后 72 小时内）
-npm unpublish @modelcontextprotocol/server-screenshot@0.1.0
+npm unpublish @ylubi/screenshot-mcp@0.1.0
 
 # 撤销整个包（慎用！）
-npm unpublish @modelcontextprotocol/server-screenshot --force
+npm unpublish @ylubi/screenshot-mcp --force
 ```
 
 **注意**: npm 不鼓励撤销发布，建议发布新版本修复问题。

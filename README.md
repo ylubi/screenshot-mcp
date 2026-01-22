@@ -41,7 +41,7 @@
   "mcpServers": {
     "screenshot": {
       "command": "npx",
-      "args": ["-y", "@ylubi/server-screenshot"]
+      "args": ["-y", "@ylubi/screenshot-mcp"]
     }
   }
 }
@@ -58,7 +58,7 @@
   "cline.mcpServers": {
     "screenshot": {
       "command": "npx",
-      "args": ["-y", "@ylubi/server-screenshot"]
+      "args": ["-y", "@ylubi/screenshot-mcp"]
     }
   }
 }
@@ -71,7 +71,7 @@
 ```json
 {
   "command": "npx",
-  "args": ["-y", "@ylubi/server-screenshot"]
+  "args": ["-y", "@ylubi/screenshot-mcp"]
 }
 ```
 
@@ -238,3 +238,14 @@ npm run test:all     # 运行所有测试
 ## 许可证
 
 MIT
+
+## 交流反馈
+
+如果你在使用过程中遇到问题、有任何建议或者新需求，欢迎通过以下方式联系：
+
+- 📧 **邮箱**: yhuiche@gmail.com
+- � **QQ 群**: [点击加入](https://qm.qq.com/q/hKOkL4z9dK)（群号：661990120）
+- �🐛 **问题反馈**: [GitHub Issues](https://github.com/ylubi/screenshot-mcp/issues)
+- ⭐ **项目地址**: [github.com/ylubi/screenshot-mcp](https://github.com/ylubi/screenshot-mcp)
+
+欢迎 Star ⭐ 和贡献代码！
