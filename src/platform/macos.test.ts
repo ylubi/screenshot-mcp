@@ -9,7 +9,9 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { MacOSPlatform } from './macos.js';
 import { ErrorCode, PlatformError } from '../types/errors.js';
 
-describe('MacOSPlatform', () => {
+const describeMacOS = process.platform === 'darwin' ? describe : describe.skip;
+
+describeMacOS('MacOSPlatform', () => {
   let platform: MacOSPlatform;
 
   beforeEach(() => {

@@ -9,7 +9,9 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { WindowsPlatform } from './windows.js';
 import { ErrorCode, PlatformError } from '../types/errors.js';
 
-describe('WindowsPlatform', () => {
+const describeWindows = process.platform === 'win32' ? describe : describe.skip;
+
+describeWindows('WindowsPlatform', () => {
   let platform: WindowsPlatform;
 
   beforeEach(() => {

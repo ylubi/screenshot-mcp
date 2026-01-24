@@ -71,7 +71,7 @@ describe('Server Info', () => {
 
     assert.ok(response.result.serverInfo);
     assert.strictEqual(response.result.serverInfo.name, 'screenshot-mcp');
-    assert.strictEqual(response.result.serverInfo.version, '1.0.0');
+    assert.strictEqual(response.result.serverInfo.version, '1.1.0');
     assert.ok(response.result.serverInfo.description);
     assert.ok(response.result.serverInfo.description.includes('screenshot'));
     assert.ok(response.result.serverInfo.description.includes('window capture'));
